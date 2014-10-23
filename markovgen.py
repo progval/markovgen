@@ -6,6 +6,7 @@ import random
 REGEXPS = {
     'weechat': '^.*\t.+\t(<[^ ]+> )?(?P<message>.*)$',
     'xchat': '[a-z.]+ [0-9]+ [0-9:]+ <[^ ]+> (<[^ ]+> )?(?P<message>.*)$',
+    'supybot': '^[^ ]*  (<[^ ]+> )?(?P<message>.*)$',
 }
 
 class Markov(object):
@@ -64,7 +65,7 @@ class Markov(object):
 
 
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) < 3:
         print('Syntax: %s <extracter> <log file>' % sys.argv[0])
         exit(1)
     if sys.argv[1] not in REGEXPS:
@@ -72,7 +73,9 @@ def main():
         exit(1)
     regexp = REGEXPS[sys.argv[1]]
     extracter = re.compile(regexp)
-    messages = [extracter.match(x) for x in open(sys.argv[2]).readlines()]
+    messages = []
+    for filename in sys.argv[2:]:
+        messages.extend([extracter.match(x) for x in open(filename).readlines()])
     messages = [x.group('message') for x in messages if x]
 
     m = Markov(messages)
