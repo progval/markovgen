@@ -11,11 +11,12 @@ REGEXPS = {
 
 class Markov(object):
 
-    def __init__(self, messages):
+    def __init__(self, messages=None):
         self.cache = {}
         self.words = ['\n']
-        for message in messages:
-            self.feed(message)
+        if messages:
+            for message in messages:
+                self.feed(message)
 
 
     def triples(self, words):
@@ -39,6 +40,12 @@ class Markov(object):
             else:
                 self.cache[key] = [w3]
         self.words.extend(splitted + ['\n'])
+
+    def feed_from_file(self, fd, extracter):
+        messages = [extracter.match(x) for x in fd.readlines()]
+        messages = [x.group('message') for x in messages if x]
+        for message in messages:
+            self.feed(message)
 
     def generate_markov_text(self, max_size=30):
         seed_word = '\n'
@@ -73,12 +80,11 @@ def main():
         exit(1)
     regexp = REGEXPS[sys.argv[1]]
     extracter = re.compile(regexp)
-    messages = []
+    m = Markov()
     for filename in sys.argv[2:]:
-        messages.extend([extracter.match(x) for x in open(filename).readlines()])
-    messages = [x.group('message') for x in messages if x]
+        with open(filename) as fd:
+            m.feed_from_file(fd, extracter)
 
-    m = Markov(messages)
     for x in range(0, 500):
         print(m.generate_markov_text())
 
