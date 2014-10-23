@@ -1,6 +1,12 @@
+#!/usr/bin/env python3
 import re
 import sys
 import random
+
+REGEXPS = {
+    'weechat': '^.*\t.+\t(<[^ ]+> )?(?P<message>.*)$',
+    'xchat': '[a-z.]+ [0-9]+ [0-9:]+ <[^ ]+> (<[^ ]+> )?(?P<message>.*)$',
+}
 
 class Markov(object):
 
@@ -55,10 +61,24 @@ class Markov(object):
         return ' '.join(filter(lambda x:x!='\n', gen_words))
 
 
-extracter = re.compile('^.*\t.+\t(<[^ ]+> )?(?P<message>.*)$')
-messages = [extracter.match(x) for x in open(sys.argv[1]).readlines()]
-messages = [x.group('message') for x in messages if x]
 
-m = Markov(messages)
-for x in range(0, 500):
-    print(m.generate_markov_text())
+
+def main():
+    if len(sys.argv) != 3:
+        print('Syntax: %s <extracter> <log file>' % sys.argv[0])
+        exit(1)
+    if sys.argv[1] not in REGEXPS:
+        print('Supported extracters: %s' % ', '.join(REGEXPS))
+        exit(1)
+    regexp = REGEXPS[sys.argv[1]]
+    extracter = re.compile(regexp)
+    messages = [extracter.match(x) for x in open(sys.argv[2]).readlines()]
+    messages = [x.group('message') for x in messages if x]
+    print(repr(messages))
+
+    m = Markov(messages)
+    for x in range(0, 500):
+        print(m.generate_markov_text())
+
+if __name__ == '__main__':
+    main()
