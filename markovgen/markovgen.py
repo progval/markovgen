@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
 import re
-import sys
 import random
-
-REGEXPS = {
-    'weechat': '^.*\t.+\t(<[^ ]+> )?(?P<message>.*)$',
-    'xchat': '[a-z.]+ [0-9]+ [0-9:]+ <[^ ]+> (<[^ ]+> )?(?P<message>.*)$',
-    'supybot': '^[^ ]*  (<[^ ]+> )?(?P<message>.*)$',
-}
 
 class Markov(object):
 
@@ -42,10 +35,7 @@ class Markov(object):
         self.words.extend(splitted + ['\n'])
 
     def feed_from_file(self, fd, extracter):
-        messages = [extracter.match(x) for x in fd.readlines()]
-        messages = [x.group('message') for x in messages if x]
-        for message in messages:
-            self.feed(message)
+        list(map(self.feed, filter(bool, map(extracter, fd.readlines()))))
 
     def generate_markov_text(self, max_size=30):
         seed_word = '\n'
