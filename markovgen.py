@@ -74,7 +74,6 @@ def main():
     extracter = re.compile(regexp)
     messages = [extracter.match(x) for x in open(sys.argv[2]).readlines()]
     messages = [x.group('message') for x in messages if x]
-    print(repr(messages))
 
     m = Markov(messages)
     for x in range(0, 500):
