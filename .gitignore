@@ -1,0 +1,6 @@
+build/
+dist/
+*.swp
+*.pyc
+*.pyo
+markovgen.egg-info/
