@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 import re
 import sys
+import codecs
 import random
+
+try:
+    import chardet
+except ImportError:
+    try:
+        import charade as chardet
+    except ImportError:
+        chardet = None
 
 class Markov(object):
 
@@ -104,12 +113,17 @@ def main():
         exit(1)
     regexp = re.compile(REGEXPS[sys.argv[1]])
     def extracter(x):
+        encoding = 'utf8'
+        if chardet:
+            encoding = chardet.detect(x)['encoding']
+        x = x.decode(encoding)
         msg = regexp.match(x)
+        print(repr(msg.group('message')))
         if msg:
             return msg.group('message')
     m = Markov()
     for filename in sys.argv[2:]:
-        with open(filename) as fd:
+        with codecs.open(filename, 'rb') as fd:
             m.feed_from_file(fd, extracter)
 
     for x in range(0, 500):

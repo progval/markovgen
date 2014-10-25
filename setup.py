@@ -24,6 +24,9 @@ setup(
     packages=[
         'markovgen',
     ],
+    extras_require = {
+        'encoding_guessing': ['chardet'], # Or charade
+    },
 )
 
 
