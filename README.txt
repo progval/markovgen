@@ -2,6 +2,7 @@ Installation
 ============
 
 Using pip:
+
 * pip3 install markovgen --user
 
 Or
