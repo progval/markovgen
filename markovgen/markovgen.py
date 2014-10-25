@@ -41,16 +41,30 @@ class Markov(object):
     def feed_from_file(self, fd, extracter):
         list(map(self.feed, filter(bool, map(extracter, fd.readlines()))))
 
-    def select_seed(self, backward):
+    def select_seed(self, seed_word, backward):
         d = -1 if backward else +1
-        seed_word = '\n'
-        while seed_word == '\n' or next_word == '\n':
-            seed = random.randint(1, len(self.words)-3)
-            seed_word, next_word = self.words[seed], self.words[seed+d]
+        if not seed_word:
+            # Select a random seed and a random next word
+            seed_word = '\n'
+            while seed_word == '\n' or next_word == '\n':
+                seed = random.randint(1, len(self.words)-3)
+                seed_word, next_word = self.words[seed], self.words[seed+d]
+        elif seed_word in self.words:
+            # List the indexes of the occurences of the seed in the words,
+            # select one of them, and take the next word.
+            possible_indexes = [i+1 for (i, x) in enumerate(self.words[1:-1])
+                              if self.words[i+1] == seed_word]
+            next_word = self.words[random.choice(possible_indexes)+d]
+            if backward:
+                assert (seed_word, next_word) in self.backward_cache
+            else:
+                assert (seed_word, next_word) in self.forward_cache
+        else:
+            raise ValueError('%s is not in the corpus.' % seed_word)
         return (seed_word, next_word)
 
-    def generate_markov_text(self, max_size=30, backward=False):
-        (seed_word, next_word) = self.select_seed(backward)
+    def generate_markov_text(self, max_size=30, seed_word=None, backward=False):
+        (seed_word, next_word) = self.select_seed(seed_word, backward)
         cache = self.backward_cache if backward else self.forward_cache
 
         if random.choice([True, False, False]) and ('\n', seed_word) in cache:
