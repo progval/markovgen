@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import re
+import sys
 import random
 
 class Markov(object):
@@ -87,6 +88,12 @@ class Markov(object):
 
 
 
+REGEXPS = {
+    'weechat': '^.*\t.+\t(<[^ ]+> )?(?P<message>.*)$',
+    'xchat': '[a-z.]+ [0-9]+ [0-9:]+ <[^ ]+> (<[^ ]+> )?(?P<message>.*)$',
+    'supybot': '^[^ ]*  (<[^ ]+> )?(?P<message>.*)$',
+}
+
 
 def main():
     if len(sys.argv) < 3:
@@ -95,8 +102,11 @@ def main():
     if sys.argv[1] not in REGEXPS:
         print('Supported extracters: %s' % ', '.join(REGEXPS))
         exit(1)
-    regexp = REGEXPS[sys.argv[1]]
-    extracter = re.compile(regexp)
+    regexp = re.compile(REGEXPS[sys.argv[1]])
+    def extracter(x):
+        msg = regexp.match(x)
+        if msg:
+            return msg.group('message')
     m = Markov()
     for filename in sys.argv[2:]:
         with open(filename) as fd:
