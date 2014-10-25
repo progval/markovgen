@@ -99,15 +99,16 @@ class Markov(object):
 
 def mixed_encoding_extracting(f):
     def newf(msg):
-        encoding = 'utf8'
-        if chardet:
-            encoding = chardet.detect(msg)['encoding']
         try:
-            msg = msg.decode(encoding)
+            msg = msg.decode()
         except UnicodeDecodeError:
-            return None
-        else:
-            return f(msg)
+            if chardet:
+                encoding = chardet.detect(msg)['encoding']
+                try:
+                    msg = msg.decode(encoding)
+                except UnicodeDecodeError:
+                    return None
+        return f(msg)
     return newf
 
 REGEXPS = {
