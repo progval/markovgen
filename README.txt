@@ -12,6 +12,7 @@ Usage:
 
 Supported extracters are:
 
+* supybot
 * weechat
 * xchat
 

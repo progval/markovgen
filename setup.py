@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='markovgen',
-    version='0.2.1',
+    version='0.2.2',
     description='Another text generator based on Markov chains.',
     url='https://github.com/ProgVal/markovgen',
     author='Valentin Lorentz',
