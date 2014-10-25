@@ -4,6 +4,8 @@ import sys
 import codecs
 import random
 
+__all__ = ['Markov', 'mixed_encoding_extracting', 'REGEXPS']
+
 try:
     import chardet
 except ImportError:
@@ -95,7 +97,14 @@ class Markov(object):
             gen_words = reversed(gen_words)
         return ' '.join(filter(lambda x:x!='\n', gen_words))
 
-
+def mixed_encoding_extracting(f):
+    def newf(msg):
+        encoding = 'utf8'
+        if chardet:
+            encoding = chardet.detect(msg)['encoding']
+        msg = msg.decode(encoding)
+        return f(msg)
+    return newf
 
 REGEXPS = {
     'weechat': '^.*\t.+\t(<[^ ]+> )?(?P<message>.*)$',
@@ -112,13 +121,9 @@ def main():
         print('Supported extracters: %s' % ', '.join(REGEXPS))
         exit(1)
     regexp = re.compile(REGEXPS[sys.argv[1]])
+    @mixed_encoding_extracting
     def extracter(x):
-        encoding = 'utf8'
-        if chardet:
-            encoding = chardet.detect(x)['encoding']
-        x = x.decode(encoding)
         msg = regexp.match(x)
-        print(repr(msg.group('message')))
         if msg:
             return msg.group('message')
     m = Markov()
