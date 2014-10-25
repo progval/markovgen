@@ -2,14 +2,15 @@ Installation
 ============
 
 Using pip:
-    pip3 install markovgen --user
+* pip3 install markovgen --user
 
 Or
 
 From the git repository:
-    git clone https://github.com/ProgVal/markovgen.git
-    cd markovgen
-    python3 setup.py install --user
+
+* git clone https://github.com/ProgVal/markovgen.git
+* cd markovgen
+* python3 setup.py install --user
 
 
 Command-line usage
