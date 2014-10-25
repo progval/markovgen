@@ -102,8 +102,12 @@ def mixed_encoding_extracting(f):
         encoding = 'utf8'
         if chardet:
             encoding = chardet.detect(msg)['encoding']
-        msg = msg.decode(encoding)
-        return f(msg)
+        try:
+            msg = msg.decode(encoding)
+        except UnicodeDecodeError:
+            return None
+        else:
+            return f(msg)
     return newf
 
 REGEXPS = {
