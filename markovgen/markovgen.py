@@ -45,7 +45,7 @@ class Markov(object):
 
     def feed(self, message):
         splitted = message.split(' ')
-        for w1, w2, w3 in self.triples(self.words[-1:] + splitted + ['\n']):
+        for w1, w2, w3 in self.triples(self.words[-2:] + splitted + ['\n']):
             self._add_key_to_cache((w1, w2), self.forward_cache, w3)
             self._add_key_to_cache((w3, w2), self.backward_cache, w1)
         self.words.extend(splitted + ['\n'])
@@ -66,11 +66,8 @@ class Markov(object):
             # select one of them, and take the next word.
             possible_indexes = [i+1 for (i, x) in enumerate(self.words[1:-1])
                               if self.words[i+1] == seed_word]
-            next_word = self.words[random.choice(possible_indexes)+d]
-            if backward:
-                assert (seed_word, next_word) in self.backward_cache
-            else:
-                assert (seed_word, next_word) in self.forward_cache
+            index = random.choice(possible_indexes)
+            next_word = self.words[index+d]
         else:
             raise ValueError('%s is not in the corpus.' % seed_word)
         return (seed_word, next_word)
@@ -87,6 +84,8 @@ class Markov(object):
         for i in range(max_size):
             gen_words.append(w1)
             new = '\n'
+            if (w1, w2) not in cache:
+                break
             new = random.choice(cache[(w1, w2)])
             if new == '\n':
                 break
