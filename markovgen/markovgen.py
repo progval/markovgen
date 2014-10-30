@@ -44,7 +44,7 @@ class Markov(object):
             cache[key] = [w]
 
     def feed(self, message):
-        splitted = message.split(' ')
+        splitted = list(map(sys.intern, message.split(' ')))
         for w1, w2, w3 in self.triples(self.words[-2:] + splitted + ['\n']):
             self._add_key_to_cache((w1, w2), self.forward_cache, w3)
             self._add_key_to_cache((w3, w2), self.backward_cache, w1)
@@ -80,6 +80,7 @@ class Markov(object):
             w1, w2 = '\n', seed_word
         else:
             w1, w2 = seed_word, next_word
+        (w1, w2) = sys.intern(w1), sys.intern(w2)
         gen_words = []
         for i in range(max_size):
             gen_words.append(w1)
