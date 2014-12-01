@@ -43,12 +43,13 @@ markovgen.Markov:
         Reads the file descriptor line by line, apply the extracter to
         it, and feeds the cache with the return value of the extracter.
 
-    generate_markov_text(max_size=30, seed_word=None, backward=False):
+    generate_markov_text(max_size=30, seed=None, backward=False):
         Generate a text based on the cache.
         Selects a random word in the cache as the first (resp. last) word,
         and continues forward (resp. backward) using the cache in the
         right direction, until it selects a message end from the cache
         or that the max_size is met.
+        The seed may be a string or a 2-tuple of strings.
 
 @mixed_encoding_extracting:
     decorator for extracters that handles decoding messages with the
