@@ -3,6 +3,7 @@ import re
 import sys
 import codecs
 import random
+import logging
 
 __all__ = ['Markov', 'mixed_encoding_extracting', 'REGEXPS']
 
@@ -69,11 +70,19 @@ class Markov(object):
             index = random.choice(possible_indexes)
             next_word = self.words[index+d]
         else:
-            raise ValueError('%s is not in the corpus.' % seed_word)
+            raise ValueError('%s is not in the corpus.' % (seed_word,))
         return (seed_word, next_word)
 
-    def generate_markov_text(self, max_size=30, seed_word=None, backward=False):
-        (seed_word, next_word) = self.select_seed(seed_word, backward)
+    def generate_markov_text(self, max_size=30, seed=None, backward=False,
+            seed_word=None):
+        if seed_word:
+            logging.warning('Use of deprecated argument `seed_word` to '
+                            'markovgen.Markov.generate_markov_text().')
+            seed = seed_word
+        if isinstance(seed, (tuple, list)):
+            (seed_word, next_word) = seed
+        else:
+            (seed_word, next_word) = self.select_seed(seed, backward)
         cache = self.backward_cache if backward else self.forward_cache
 
         if random.choice([True, False, False]) and ('\n', seed_word) in cache:
