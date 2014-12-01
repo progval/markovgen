@@ -73,6 +73,12 @@ class Markov(object):
             raise ValueError('%s is not in the corpus.' % (seed_word,))
         return (seed_word, next_word)
 
+    def available_seeds(self, backward=False):
+        if backward:
+            return self.backward_cache.keys()
+        else:
+            return self.forward_cache.keys()
+
     def generate_markov_text(self, max_size=30, seed=None, backward=False,
             seed_word=None):
         if seed_word:

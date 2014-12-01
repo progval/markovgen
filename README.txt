@@ -51,6 +51,10 @@ markovgen.Markov:
         or that the max_size is met.
         The seed may be a string or a 2-tuple of strings.
 
+    available_seeds(backward=False):
+        Returns a view on the 2-tuples of words in the corpus.
+        Useful if you want to match them against a new message.
+
 @mixed_encoding_extracting:
     decorator for extracters that handles decoding messages with the
     right charset (if chardet or charade is installed) or as utf8
