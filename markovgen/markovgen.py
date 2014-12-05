@@ -7,6 +7,8 @@ import logging
 
 __all__ = ['Markov', 'mixed_encoding_extracting', 'REGEXPS']
 
+logger = logging.Logger('markovgen')
+
 try:
     import chardet
 except ImportError:
@@ -82,8 +84,8 @@ class Markov(object):
     def generate_markov_text(self, max_size=30, seed=None, backward=False,
             seed_word=None):
         if seed_word:
-            logging.warning('Use of deprecated argument `seed_word` to '
-                            'markovgen.Markov.generate_markov_text().')
+            logger.warning('Use of deprecated argument `seed_word` to '
+                           'markovgen.Markov.generate_markov_text().')
             seed = seed_word
         if isinstance(seed, (tuple, list)):
             (seed_word, next_word) = seed
