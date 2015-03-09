@@ -56,6 +56,6 @@ markovgen.Markov:
         Useful if you want to match them against a new message.
 
 @mixed_encoding_extracting:
-    decorator for extracters that handles decoding messages with the
+    decorator for extracters that handle decoding messages with the
     right charset (if chardet or charade is installed) or as utf8
     (otherwise)
