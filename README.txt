@@ -22,6 +22,7 @@ Usage:
 
 Supported extracters are:
 
+* srt
 * supybot
 * weechat
 * xchat

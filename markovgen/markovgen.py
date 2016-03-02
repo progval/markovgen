@@ -138,6 +138,7 @@ REGEXPS = {
     'weechat': '^.*\t.+\t(<[^ ]+> )?(?P<message>.*)$',
     'xchat': '[a-z.]+ [0-9]+ [0-9:]+ <[^ ]+> (<[^ ]+> )?(?P<message>.*)$',
     'supybot': '^[^ ]*  (<[^ ]+> )?(?P<message>.*)$',
+    'srt': '^(?P<message>[^0-9].*)$',
     'plain': '^(?P<message>.*)$'
 }
 
