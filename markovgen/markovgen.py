@@ -37,7 +37,12 @@ class Markov(object):
         self.db = c = sqlite3.connect(':memory:')
         with c:
             #c.execute('CREATE TABLE triples (w1, w2, w3, nb, CONSTRAINT uniqueness UNIQUE(w1, w2, w3));')
+
             c.execute('CREATE TABLE triples (w1, w2, w3);')
+
+            #c.execute('CREATE INDEX forward ON triples (w1)')
+            #c.execute('CREATE INDEX middle ON triples (w2)')
+
             #c.execute('CREATE INDEX forward ON triples (w1, w2)')
             #c.execute('CREATE INDEX backward ON triples (w2, w3)')
 
